@@ -49,6 +49,29 @@ def createUrlPatterns():
         url(r'^/channel/(?P<channelid>.*)', 'do_channel'),
     ]
 
+def range_tuple_normalize(range_tup):
+    """Normalize a (first_byte,last_byte) range tuple.
+    Return a tuple whose first element is guaranteed to be an int
+    and whose second element will be '' (meaning: the last byte) or
+    an int. Finally, return None if the normalized tuple == (0,'')
+    as that is equivelant to retrieving the entire file.
+    """
+    if range_tup is None: return None
+    # handle first byte
+    fb = range_tup[0]
+    if fb in (None,''): fb = 0
+    else: fb = int(fb)
+    # handle last byte
+    try: lb = range_tup[1]
+    except IndexError: lb = ''
+    else:
+        if lb is None: lb = ''
+        elif lb != '': lb = int(lb)
+    # check if range is over the entire file
+    if (fb,lb) == (0,''): return None
+    # check that the range is valid
+    if lb != '' and lb < fb: raise RangeError('Invalid byte range: %s-%s' % (fb,lb))
+    return (fb,lb)
 
 _rangere = None
 def range_header_to_tuple(range_header):
