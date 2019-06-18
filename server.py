@@ -258,7 +258,7 @@ def run(server_class=ThreadedHTTPServer, handler_class=SimpleHTTPRequestHandler)
 def usage():
     print ("""
     Usage:
-    -s, --server\t Specify streaming server host address
+    -s, --server\t Specify RTMP server address
     -i, --channelid\t Specify channel id the device was registered with
     """)
 
