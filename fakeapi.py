@@ -48,8 +48,8 @@ class API:
         hdrs = {}
         s = {
             "channels": {
-                "1234567890": {
-                    "id": "1234567890",
+                kwargs.get('channelid', '12345678'): { # FIXME this ID seems to need to be the same as what the device was setup with or cam fails to start the stream. tcpdump to see what it is using to.
+                    "id": kwargs.get('channelid', '12345678'),
                     "title": "My Stream",
                     "url": "http://www.ustream.tv/channel/MyChannel",
                     "tiny_url": "https://www.ustream.tv/channel/MyChannel",

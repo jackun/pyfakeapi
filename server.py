@@ -17,6 +17,7 @@ import sys
 import getopt
 
 SERVER_HOST="localhost"
+CHANNEL_ID="12345678"
 urlpatterns = []
 
 class UrlError(Exception):
@@ -45,7 +46,7 @@ def url(r, name, default={}):
 def createUrlPatterns():
     global urlpatterns
     urlpatterns = [
-        url(r'^/users/self/channels.json', 'do_users_channels', default={'host': SERVER_HOST}),
+        url(r'^/users/self/channels.json', 'do_users_channels', default={'host': SERVER_HOST, "channelid": CHANNEL_ID}),
         url(r'^/channel/(?P<channelid>.*)', 'do_channel'),
     ]
 
@@ -255,11 +256,15 @@ def run(server_class=ThreadedHTTPServer, handler_class=SimpleHTTPRequestHandler)
 
 
 def usage():
-    print ("Usage:\n\t-s, --server\t Specify streaming server host address")
+    print ("""
+    Usage:
+    -s, --server\t Specify streaming server host address
+    -i, --channelid\t Specify channel id the device was registered with
+    """)
 
 if __name__ == '__main__':
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hs:", ["help", "server="])
+        opts, args = getopt.getopt(sys.argv[1:], "hs:i:", ["help", "server=", "channelid="])
         for o, a in opts:
             if o == "-v":
                 verbose = True
@@ -268,6 +273,8 @@ if __name__ == '__main__':
                 sys.exit()
             elif o in ("-s", "--server"):
                 SERVER_HOST = a
+            elif o in ("-i", "--channelid"):
+                CHANNEL_ID = a
             else:
                 assert False, "unhandled option"
         createUrlPatterns()
